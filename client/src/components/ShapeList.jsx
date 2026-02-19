@@ -1,15 +1,19 @@
+import LoadingSpinner from "./LoadingSpinner";
+
 function ShapeList({
   shapes,
   loading,
   loadShapeForEdit,
   deleteShape,
   selectedShape,
+  deletingId,
+  editingId,
 }) {
   if (loading)
     return (
-      <p className="text-sm text-gray-400 text-center py-4">
-        Loading shapes...
-      </p>
+      <div className="flex justify-center py-8">
+        <LoadingSpinner size="md" text="Fetching shapes..." />
+      </div>
     );
 
   if (shapes.length === 0)
@@ -38,17 +42,30 @@ function ShapeList({
             <span className="text-xs text-gray-400">{shape.type}</span>
           </div>
           <div className="flex gap-2">
+            {/* Edit Button */}
             <button
               onClick={() => loadShapeForEdit(shape)}
-              className="text-xs bg-yellow-100 hover:bg-yellow-200 text-yellow-700 font-medium px-3 py-1 rounded-lg transition-colors"
+              disabled={editingId === shape.id || deletingId === shape.id}
+              className="text-xs bg-yellow-100 hover:bg-yellow-200 disabled:opacity-50 text-yellow-700 font-medium px-3 py-1 rounded-lg transition-colors flex items-center gap-1 min-w-[52px] justify-center"
             >
-              Edit
+              {editingId === shape.id ? (
+                <LoadingSpinner size="sm" text="" />
+              ) : (
+                "Edit"
+              )}
             </button>
+
+            {/* Delete Button */}
             <button
               onClick={() => deleteShape(shape.id)}
-              className="text-xs bg-red-100 hover:bg-red-200 text-red-600 font-medium px-3 py-1 rounded-lg transition-colors"
+              disabled={deletingId === shape.id || editingId === shape.id}
+              className="text-xs bg-red-100 hover:bg-red-200 disabled:opacity-50 text-red-600 font-medium px-3 py-1 rounded-lg transition-colors flex items-center gap-1 min-w-[52px] justify-center"
             >
-              Delete
+              {deletingId === shape.id ? (
+                <LoadingSpinner size="sm" text="" />
+              ) : (
+                "Delete"
+              )}
             </button>
           </div>
         </div>

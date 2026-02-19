@@ -9,13 +9,16 @@ export function useShape() {
   const [shapeName, setShapeName] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState(null);
+  const [editingId, setEditingId] = useState(null);
+
   const isLoadingEdit = useRef(false);
 
   useEffect(() => {
     fetchShapes();
   }, []);
 
-  // when shape type changes, reset dimensions to defaults
   useEffect(() => {
     if (isLoadingEdit.current) {
       isLoadingEdit.current = false;
@@ -40,6 +43,7 @@ export function useShape() {
 
   async function saveShape() {
     try {
+      setSaving(true);
       setError(null);
       const payload = {
         name: shapeName,
@@ -56,25 +60,32 @@ export function useShape() {
       await fetchShapes();
     } catch (err) {
       setError(err.message);
+    } finally {
+      setSaving(false);
     }
   }
 
   async function deleteShape(id) {
     try {
+      setDeletingId(id);
       setError(null);
       await shapeService.deleteShape(id);
       await fetchShapes();
     } catch (err) {
       setError(err.message);
+    } finally {
+      setDeletingId(null);
     }
   }
 
-  function loadShapeForEdit(shape) {
+  async function loadShapeForEdit(shape) {
+    setEditingId(shape.id);
     isLoadingEdit.current = true;
     setSelectedShape(shape);
     setShapeType(shape.type);
     setDimensions(shape.dimensionData);
     setShapeName(shape.name);
+    setEditingId(null);
   }
 
   function clearSelection() {
@@ -95,6 +106,9 @@ export function useShape() {
     setShapeName,
     error,
     loading,
+    saving,
+    deletingId,
+    editingId,
     saveShape,
     deleteShape,
     loadShapeForEdit,

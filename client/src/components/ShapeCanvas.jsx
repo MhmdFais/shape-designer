@@ -7,7 +7,6 @@ function ShapeCanvas({ shapeType, dimensions }) {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
 
-    // clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     ctx.fillStyle = "#3B82F6";
@@ -51,9 +50,12 @@ function ShapeCanvas({ shapeType, dimensions }) {
   }, [shapeType, dimensions]);
 
   return (
-    <div className="flex items-center justify-center bg-gray-50 rounded-xl border border-gray-200 p-4">
-      <canvas ref={canvasRef} width={400} height={350} className="rounded-lg" />
-    </div>
+    <canvas
+      ref={canvasRef}
+      width={700}
+      height={500}
+      className="w-full h-full"
+    />
   );
 }
 
