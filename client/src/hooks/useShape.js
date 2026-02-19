@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { shapeService } from "../services/shapeService";
 
 export function useShape() {
@@ -9,6 +9,7 @@ export function useShape() {
   const [shapeName, setShapeName] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const isLoadingEdit = useRef(false);
 
   useEffect(() => {
     fetchShapes();
@@ -16,6 +17,10 @@ export function useShape() {
 
   // when shape type changes, reset dimensions to defaults
   useEffect(() => {
+    if (isLoadingEdit.current) {
+      isLoadingEdit.current = false;
+      return;
+    }
     if (shapeType === "RECTANGLE") setDimensions({ width: 100, height: 100 });
     if (shapeType === "CIRCLE") setDimensions({ radius: 50 });
     if (shapeType === "TRIANGLE") setDimensions({ base: 100, height: 80 });
@@ -65,6 +70,7 @@ export function useShape() {
   }
 
   function loadShapeForEdit(shape) {
+    isLoadingEdit.current = true;
     setSelectedShape(shape);
     setShapeType(shape.type);
     setDimensions(shape.dimensionData);

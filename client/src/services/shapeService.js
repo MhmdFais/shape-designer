@@ -7,7 +7,7 @@ const api = axios.create({
 
 export const shapeService = {
   async getAllShapes() {
-    const { data } = await api.get("/");
+    const { data } = await api.get("");
     return data;
   },
 
@@ -17,7 +17,7 @@ export const shapeService = {
   },
 
   async createShape(shapeData) {
-    const { data } = await api.post("/", shapeData);
+    const { data } = await api.post("", shapeData);
     return data;
   },
 
